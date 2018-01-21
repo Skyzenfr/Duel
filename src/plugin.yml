@@ -1,0 +1,8 @@
+name: Duel
+version: 1.5
+description: Mini jeu duel
+
+author: Skyzen
+website: https://www.skyzen.fr/game/duel
+
+main: fr.skyzen.duel.Main
