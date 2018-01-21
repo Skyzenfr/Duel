@@ -65,10 +65,10 @@ public class DamageListeners implements Listener {
                 for (Player pls : Bukkit.getOnlinePlayers()) {
                     pls.playSound(pls.getLocation(), Sound.ENTITY_BLAZE_DEATH, 1, 1);
                 }
-                if(((Player) victim).getDisplayName() == ((Player) victim).getDisplayName()){
-                    Bukkit.broadcastMessage("§8[§6Duel§8] §a" + ((Player) victim).getDisplayName() + " §7vient de se suicider.");
-                }else if (!(((Player) victim).getDisplayName() == ((Player) victim).getDisplayName())){
+                if(((Player) victim).getDisplayName() != ((Player) victim).getDisplayName()){
                     Bukkit.broadcastMessage("§8[§6Duel§8] §a" + ((Player) victim).getDisplayName() + " §7a été tué par §c" + killer.getDisplayName());
+                }else{
+                    Bukkit.broadcastMessage("§8[§6Duel§8] §a" + ((Player) victim).getDisplayName() + " §7vient de se suicider.");
                 }
             }
         }
