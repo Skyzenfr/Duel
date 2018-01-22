@@ -1,8 +1,8 @@
-package fr.skyzen.duel.listeners;
+package fr.skyzen.duel.listeners.player;
 
 import com.connorlinfoot.actionbarapi.ActionBarAPI;
 import com.connorlinfoot.titleapi.TitleAPI;
-import fr.skyzen.duel.Main;
+import fr.skyzen.duel.Duel;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,13 +11,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class MessagesListeners implements Listener {
-
-    private Main main;
-
-    public MessagesListeners(Main main) {
-        this.main = main;
-    }
+public class PlayerChatListener implements Listener {
 
     @EventHandler
     public void Chat(AsyncPlayerChatEvent e) {
@@ -29,10 +23,10 @@ public class MessagesListeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         final Player j = e.getPlayer();
-
-        TitleAPI.sendTabTitle(j, "§e§lPIXELSPALACE", "§fActualité, forum et support §b➔ §a§lPixelsPalace.fr");
-
         e.setJoinMessage(null);
+
+        TitleAPI.sendTabTitle(j, "§e§lSMASHS", "§fActualité, forum et support §b➔ §a§lSmashs.fr");
+
         for (Player pl : Bukkit.getOnlinePlayers()) {
             ActionBarAPI.sendActionBar(pl, "§a" + j.getDisplayName() + " §evient de rejoindre la partie §a(" + Bukkit.getOnlinePlayers().size() + "/" + Bukkit.getMaxPlayers() + ")");
         }

@@ -1,13 +1,13 @@
-package fr.skyzen.duel.game;
+package fr.skyzen.duel.manager;
 
-import fr.skyzen.duel.Main;
+import fr.skyzen.duel.Duel;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
-public enum Kits {
+public enum Classes {
 
     DEFAUT(13, "§bDéfaut", new ItemStack(Material.WOOD_SWORD, 1)),
     TANK(21, "§bTank", new ItemStack(Material.CHAINMAIL_CHESTPLATE, 1)),
@@ -18,7 +18,7 @@ public enum Kits {
     public String kitName;
     public ItemStack icon;
 
-    Kits(int slot, String kitName, ItemStack icon) {
+    Classes(int slot, String kitName, ItemStack icon) {
         this.slot = slot;
         this.kitName = kitName;
         this.icon = icon;
@@ -45,10 +45,10 @@ public enum Kits {
     }
 
     public void add(Player player) {
-        if (Main.getInstance().kits.containsKey(player)) {
-            Main.getInstance().kits.remove(player);
+        if (Duel.getInstance().kits.containsKey(player)) {
+            Duel.getInstance().kits.remove(player);
         }
-        Main.getInstance().kits.put(player, this);
+        Duel.getInstance().kits.put(player, this);
 
     }
 

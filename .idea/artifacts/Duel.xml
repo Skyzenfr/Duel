@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="Duel">
-    <output-path>$USER_HOME$/Desktop/Archives/Serveurs/Serveur mc mini jeu/plugins</output-path>
+    <output-path>$USER_HOME$/Desktop/Archives/Serveurs/Minecraft/Duel/plugins</output-path>
     <root id="archive" name="Duel.jar">
       <element id="module-output" name="Duel" />
     </root>

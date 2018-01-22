@@ -1,9 +1,11 @@
-package fr.skyzen.duel.tasks;
+package fr.skyzen.duel.runnable;
 
 import com.connorlinfoot.titleapi.TitleAPI;
-import fr.skyzen.duel.Main;
-import fr.skyzen.duel.game.Kits;
-import fr.skyzen.duel.game.State;
+import fr.skyzen.duel.Duel;
+import fr.skyzen.duel.manager.Equipe;
+import fr.skyzen.duel.manager.GameStatus;
+import fr.skyzen.duel.manager.Classes;
+import fr.skyzen.duel.manager.Joueur;
 import fr.skyzen.duel.utils.ItemModifier;
 import fr.skyzen.duel.utils.ScoreboardSign;
 import org.bukkit.*;
@@ -15,14 +17,21 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AutoStart extends BukkitRunnable {
+/**
+ * Class à revoir dans le détail, lors des vérifications, optimisations et debug de codes.
+ **/
+
+public class LauchRunnable extends BukkitRunnable {
 
     public int timer = 30;
-    private Main main;
+    private Duel duel;
+    private Equipe blue;
+    private Equipe red;
 
-    public AutoStart(Main main) {
-        this.main = main;
+    public LauchRunnable(Duel duel) {
+        this.duel = duel;
     }
+    private HashMap<Player, Joueur> pj;
 
     public Map<Player, ScoreboardSign> boards = new HashMap<>();
 
@@ -30,67 +39,67 @@ public class AutoStart extends BukkitRunnable {
     @Override
     public void run() {
 
-        if (main.getPlayers().size() < 2) {
+        if (duel.getPlayers().size() < 2) {
             cancel();
-            main.setState(State.WAITING);
+            duel.setGameStatus(GameStatus.WAITING);
 
-            main.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+            duel.getServer().getScheduler().scheduleSyncDelayedTask(duel, new Runnable() {
                 public void run() {
-                    for (Player pl : main.getPlayers()) {
+                    for (Player pl : duel.getPlayers()) {
                         pl.setLevel(30);
                     }
                 }
             }, 20 * 1);
         }
 
-        for (Player pl : main.getPlayers()) {
+        for (Player pl : duel.getPlayers()) {
             pl.setLevel(timer);
         }
 
         //ON INITIALISE LES MESSAGES POUR LES DIFFERENTES SECONDES DU TIMER
         if (timer == 30 || timer == 15) {
-            for (Player pl : main.getPlayers()) {
+            for (Player pl : duel.getPlayers()) {
                 TitleAPI.sendTitle(pl, 20, 50, 20, "§b" + timer, "");
                 pl.playSound(pl.getLocation(), Sound.BLOCK_NOTE_BASS, 1, 1);
             }
         }
         if (timer == 10) {
-            for (Player pl : main.getPlayers()) {
+            for (Player pl : duel.getPlayers()) {
                 TitleAPI.sendTitle(pl, 20, 50, 20, "§e" + timer, "§cAttention!");
                 pl.playSound(pl.getLocation(), Sound.BLOCK_NOTE_BASS, 1, 1);
             }
         }
         if (timer == 5 || timer == 4) {
-            for (Player pl : main.getPlayers()) {
+            for (Player pl : duel.getPlayers()) {
                 TitleAPI.sendTitle(pl, 20, 50, 20, "§6" + timer, "§ePréparez-vous!");
                 pl.playSound(pl.getLocation(), Sound.BLOCK_NOTE_BASEDRUM, 1, 1);
             }
         } else if (timer == 3 || timer == 2 || timer == 1) {
-            for (Player pl : main.getPlayers()) {
+            for (Player pl : duel.getPlayers()) {
                 TitleAPI.sendTitle(pl, 20, 50, 20, "§c" + timer, "§ePréparez-vous!");
                 pl.playSound(pl.getLocation(), Sound.BLOCK_NOTE_BASEDRUM, 1, 1);
             }
         }
 
         if (timer == 0) {
-            main.setState(State.PLAYING);
+            duel.setGameStatus(GameStatus.PLAYING);
 
-            for (int i = 0; i < main.getPlayers().size(); i++) {
-                final Player j = main.getPlayers().get(i);
+            Duel.getInstance().start();
+
+            for (int i = 0; i < duel.getPlayers().size(); i++) {
+                final Player j = duel.getPlayers().get(i);
 
                 //ON INITIALISE LES PROPRIETES DU JOUEUR
-                Location spawn = main.getSpawns().get(i);
-                j.teleport(spawn);
                 j.setGameMode(GameMode.SURVIVAL);
                 j.setMaxHealth(40);
                 j.setHealth(j.getMaxHealth());
                 j.setLevel(120);
 
                 //ON ENVOI UN TITLE AUX JOUEURS
-                for (Player pl : main.getPlayers()) {
-                    if(main.getPlayers().size() == 2){
+                for (Player pl : duel.getPlayers()) {
+                    if(duel.getPlayers().size() == 2){
                         TitleAPI.sendTitle(pl, 20, 20, 20, "§aFIGHT!", "§eAllez tuer votre adversaire");
-                    }else if(main.getPlayers().size() > 2){
+                    }else if(duel.getPlayers().size() > 2){
                         TitleAPI.sendTitle(pl, 20, 20, 20, "§aFIGHT!", "§eAllez tuer vos adversaires");
                     }
                     pl.playSound(pl.getLocation(), Sound.BLOCK_NOTE_SNARE, 1, 1);
@@ -99,7 +108,7 @@ public class AutoStart extends BukkitRunnable {
                     PlayerInventory inv = j.getInventory();
                     inv.clear();
 
-                    if (Main.getInstance().kits.get(j) == Kits.DEFAUT) {
+                    if (Duel.getInstance().kits.get(j) == Classes.DEFAUT) {
 
                         //EQUIPEMENT
                         inv.setItem(0, ItemModifier.setText(new ItemStack(Material.IRON_SWORD, 1), "", ""));
@@ -112,7 +121,7 @@ public class AutoStart extends BukkitRunnable {
                         inv.setItem(37, ItemModifier.setText(new ItemStack(Material.CHAINMAIL_LEGGINGS, 1), "", ""));
                         inv.setItem(36, ItemModifier.setText(new ItemStack(Material.CHAINMAIL_BOOTS, 1), "", ""));
 
-                    } else if (Main.getInstance().kits.get(j) == Kits.TANK) {
+                    } else if (Duel.getInstance().kits.get(j) == Classes.TANK) {
 
                         //EQUIPEMENT
                         inv.setItem(0, ItemModifier.setText(new ItemStack(Material.STONE_SWORD, 1), "", ""));
@@ -128,7 +137,7 @@ public class AutoStart extends BukkitRunnable {
                         inv.setItem(37, ItemModifier.setText(new ItemStack(Material.CHAINMAIL_LEGGINGS, 1), "", ""));
                         inv.setItem(36, ItemModifier.setText(new ItemStack(Material.CHAINMAIL_BOOTS, 1), "", ""));
 
-                    } else if (Main.getInstance().kits.get(j) == Kits.DEFENSEUR) {
+                    } else if (Duel.getInstance().kits.get(j) == Classes.DEFENSEUR) {
 
                         inv.setItem(0, ItemModifier.setText(new ItemStack(Material.IRON_SWORD, 1), "", ""));
                         inv.setItem(1, ItemModifier.setText(new ItemStack(Material.BOW, 1), "", ""));
@@ -147,7 +156,7 @@ public class AutoStart extends BukkitRunnable {
 
                     j.updateInventory();
 
-                    new GameCycle(main).runTaskTimer(main, 0, 20);
+                    new MoveStartRunnable().runTaskTimer(duel, 0, 20);
                 }
             }
 

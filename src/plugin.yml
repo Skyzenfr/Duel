@@ -1,8 +1,8 @@
 name: Duel
-version: 1.5
-description: Mini jeu duel
+main: fr.skyzen.duel.Duel
+version: 1.0
+
+depend: [TitleAPI, ActionBarAPI]
 
 author: Skyzen
-website: https://www.skyzen.fr/game/duel
-
-main: fr.skyzen.duel.Main
+website: http://www.skyzen.fr/games/duel

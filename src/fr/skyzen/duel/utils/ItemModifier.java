@@ -17,6 +17,7 @@ public class ItemModifier {
         return item;
     }
 
+    @Deprecated
     public static ItemStack giveSkull(String pseudo) {
         ItemStack is = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
         SkullMeta meta = (SkullMeta) is.getItemMeta();

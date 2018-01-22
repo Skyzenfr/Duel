@@ -1,7 +1,10 @@
-package fr.skyzen.duel.listeners;
+package fr.skyzen.duel.runnable;
 
-import fr.skyzen.duel.Main;
-import fr.skyzen.duel.game.Kits;
+/**
+ * Class à revoir dans le détail, lors des vérifications, optimisations et debug de codes.
+ **/
+
+import fr.skyzen.duel.manager.Classes;
 import fr.skyzen.duel.utils.ScoreboardSign;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,13 +17,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ScoreboardListener implements Listener {
-
-    private Main main;
-
-    public ScoreboardListener(Main main) {
-        this.main = main;
-    }
+public class ScoreboardRunnable implements Listener {
 
     public Map<Player, ScoreboardSign> boards = new HashMap<>();
 
@@ -41,7 +38,7 @@ public class ScoreboardListener implements Listener {
         scoreboard.setLine(5, "§7Classe: §bDéfaut");
         scoreboard.setLine(6, "§7Carte: §bSpace");
         scoreboard.setLine(7, " ");
-        scoreboard.setLine(8, "§6§lplay.pixelspalace.fr");
+        scoreboard.setLine(8, "§6§lplay.smashs.fr");
 
         boards.put(j, scoreboard);
     }
@@ -70,17 +67,17 @@ public class ScoreboardListener implements Listener {
             e.setCancelled(true);
             j.closeInventory();
 
-            if (e.getCurrentItem().getType() == Kits.DEFENSEUR.getIcon().getType()) {
+            if (e.getCurrentItem().getType() == Classes.DEFENSEUR.getIcon().getType()) {
                 if (boards.containsKey(j)) {
                     boards.get(j).setLine(5, "§7Classe: §bDéfenseur");
                 }
 
-            } else if (e.getCurrentItem().getType() == Kits.TANK.getIcon().getType()) {
+            } else if (e.getCurrentItem().getType() == Classes.TANK.getIcon().getType()) {
                 if (boards.containsKey(j)) {
                     boards.get(j).setLine(5, "§7Classe: §bTank");
                 }
 
-            } else if (e.getCurrentItem().getType() == Kits.DEFAUT.getIcon().getType()) {
+            } else if (e.getCurrentItem().getType() == Classes.DEFAUT.getIcon().getType()) {
                 if (boards.containsKey(j)) {
                     boards.get(j).setLine(5, "§7Classe: §bDéfaut");
                 }
