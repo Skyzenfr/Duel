@@ -34,7 +34,7 @@ public class PlayerJoinListener implements Listener {
         j.removePotionEffect(PotionEffectType.ABSORPTION);
         j.teleport(new Location(Bukkit.getWorld("World"), 34.466, 3, 8.070, 89.8f, -3.0f));
 
-        //On lui donne la classe par défaut pour éviter un bug.
+        //On lui donne la classe par défaut.
         Classes.DEFAUT.add(j);
 
         //Si le joueur n'est pas dans la liste des participants à la partie on l'ajoute.
